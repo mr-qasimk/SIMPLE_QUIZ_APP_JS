@@ -67,7 +67,7 @@
       
     let currentIndex = 0;
     let score = 0;
-    let selectedChoice = null; // index of selected choice for current question
+    let selectedChoice = null; 
 
     /**********************
      * ELEMENT REFERENCES
@@ -87,15 +87,12 @@
      * FUNCTIONS
      **********************/
 
-    // Show the current question and choices
     function showQuestion() {
       const q = quizQuestions[currentIndex];
       questionEl.textContent = q.text;
 
-      // Clear previous choices
       choicesEl.innerHTML = '';
 
-      // Create choice buttons
       q.choices.forEach((choiceText, i) => {
         const li = document.createElement('li');
         li.className = 'choice';
@@ -106,18 +103,14 @@
         btn.textContent = choiceText;
         btn.dataset.index = i;
 
-        // mark as selected if matches selectedChoice
         if (selectedChoice === i) btn.classList.add('selected');
 
-        // when user clicks a choice
         btn.addEventListener('click', () => {
-          // deselect any previously selected button
           Array.from(choicesEl.querySelectorAll('.choice-btn')).forEach(b => b.classList.remove('selected'));
 
           selectedChoice = i;
           btn.classList.add('selected');
 
-          // enable Next button
           nextBtn.disabled = false;
         });
 
@@ -125,37 +118,31 @@
         choicesEl.appendChild(li);
       });
 
-      // update progress text
       progressEl.textContent = `Question ${currentIndex + 1} / ${quizQuestions.length}`;
 
-      // Next button should be disabled until user selects something
       nextBtn.disabled = (selectedChoice === null);
     }
 
-    // Move to next question or finish quiz
     function nextQuestion() {
       const q = quizQuestions[currentIndex];
 
-      // If user selected an answer, check it
       if (selectedChoice !== null) {
         if (selectedChoice === q.answer) {
           score += 1;
         }
       }
 
-      // Reset selectedChoice for next question
       selectedChoice = null;
       currentIndex += 1;
 
       if (currentIndex < quizQuestions.length) {
         showQuestion();
       } else {
-        // Quiz finished
         showResult();
       }
     }
 
-    // Show final score and message
+   
     function showResult() {
       quizArea.style.display = 'none';
       resultArea.style.display = 'block';
@@ -173,7 +160,7 @@
       scoreMessage.textContent = msg;
     }
 
-    // Reset quiz to start again
+    n
     function restartQuiz() {
       currentIndex = 0;
       score = 0;
@@ -187,21 +174,18 @@
      * EVENT LISTENERS
      **********************/
     nextBtn.addEventListener('click', () => {
-      // If next is clicked but no choice selected, do nothing (button disabled normally)
+      
       if (selectedChoice === null) return;
 
-      // Move to next question
+     
       nextQuestion();
     });
 
-    // Submit button — jumps straight to finish using current selection for the current question
     submitBtn.addEventListener('click', () => {
-      // If no selection yet and you want to force-select none, we treat as wrong.
-      // But if user selected, check it first before finishing:
+      
       const q = quizQuestions[currentIndex];
       if (selectedChoice !== null && selectedChoice === q.answer) score += 1;
 
-      // mark as finished (skip remaining questions)
       currentIndex = quizQuestions.length;
       showResult();
     });
